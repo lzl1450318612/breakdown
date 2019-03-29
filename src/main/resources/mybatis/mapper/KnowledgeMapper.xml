@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.design.background.mapper.KnowledgeMapper">
+  <resultMap id="BaseResultMap" type="com.design.background.entity.Knowledge">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="title" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="content" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="writer_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, content, writer_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectKnowledgeList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_knowledge
+    where 1=1
+    <if test="knowledge.id != null and knowledge.id !=''" >
+      and id = #{knowledge.id,jdbcType=BIGINT}
+    </if>
+    <if test="knowledge.title != null and knowledge.title !=''" >
+      and title like '%${knowledge.title}%'
+    </if>
+    <if test="knowledge.content != null and knowledge.content !=''" >
+      and content like '%${knowledge.content}%'
+    </if>
+    <if test="knowledge.writerId != null and knowledge.writerId !=''" >
+      and writerId = #${knowledge.writerId}
+    </if>
+    <if test="startTime != null">
+      <![CDATA[ and create_time >= #{startTime} ]]>
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and create_time <= #{endTime} ]]>
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.design.background.entity.Knowledge">
+    insert into t_knowledge (id, title, content, 
+      writer_id, create_time)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{writerId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.design.background.entity.Knowledge">
+    insert into t_knowledge
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="writerId != null">
+        writer_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="writerId != null">
+        #{writerId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.design.background.entity.Knowledge">
+    update t_knowledge
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="writerId != null">
+        writer_id = #{writerId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.design.background.entity.Knowledge">
+    update t_knowledge
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      writer_id = #{writerId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.1.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.1.xsd">
+    <!--配置硬盘持久化目录-->
+    <!--<persistence directory="D:\ehcache" />-->
+    <!-- 定义一个cache模板 ，模板是抽象定义，可以被cache 实例配置继承  -->
+    <cache-template name="myDefault">
+        <resources>
+            <!--配置堆储存 最多允许2000 个 entries（可以理解为2000个key-value 对 ）-->
+            <heap unit="entries">2000</heap>
+            <!--配置堆外储存 最多使用500m内存-->
+            <offheap unit="MB">500</offheap>
+            <!--配置磁盘持久化储存 最多使用500m磁盘-->
+            <!--<disk unit="MB" persistent="true">500</disk>-->
+        </resources>
+    </cache-template>
+    <!--使用默认模板-->
+    <cache alias="default" uses-template="myDefault" />
+</config>

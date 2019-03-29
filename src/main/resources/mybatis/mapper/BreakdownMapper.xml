@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.design.background.mapper.BreakdownMapper">
+  <resultMap id="BaseResultMap" type="com.design.background.entity.Breakdown">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="statusCode" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="description" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="handler_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="handle_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="href_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="handle_info" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="isUrged" javaType="java.lang.Boolean" jdbcType="BIT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, statusCode, description, status, handler_id, create_time, handle_time, href_id, 
+    handle_info, isUrged
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from breakdown_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getBreakdownList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from breakdown_detail
+    where 1=1
+    <if test="breakdown.id != null and breakdown.id !=''">
+      and id = #{breakdown.id,jdbcType=BIGINT}
+    </if>
+    <if test="breakdown.description != null and breakdown.description !=''">
+      and description like '%${breakdown.description}%'
+    </if>
+    <if test="breakdown.status != null">
+      and status = #{breakdown.status}
+    </if>
+    <if test="breakdown.handlerId != null">
+      and handler_id = #{breakdown.handlerId}
+    </if>
+    <if test="createTimeStart != null">
+      <![CDATA[ and create_time >= #{createTimeStart} ]]>
+    </if>
+    <if test="createTimeEnd != null">
+      <![CDATA[ and create_time <= #{createTimeEnd} ]]>
+    </if>
+    <if test="handleTimeStart != null">
+      <![CDATA[ and handle_time >= #{handleTimeStart} ]]>
+    </if>
+    <if test="handleTimeEnd != null">
+      <![CDATA[ and handle_time <= #{handleTimeEnd} ]]>
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from breakdown_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.design.background.entity.Breakdown">
+    insert into breakdown_detail (id, statusCode, description, 
+      status, handler_id, create_time, 
+      handle_time, href_id, handle_info, 
+      isUrged)
+    values (#{id,jdbcType=BIGINT}, #{statuscode,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{handlerId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{handleTime,jdbcType=TIMESTAMP}, #{hrefId,jdbcType=BIGINT}, #{handleInfo,jdbcType=VARCHAR}, 
+      #{isurged,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.design.background.entity.Breakdown">
+    insert into breakdown_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="statuscode != null">
+        statusCode,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="handlerId != null">
+        handler_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="handleTime != null">
+        handle_time,
+      </if>
+      <if test="hrefId != null">
+        href_id,
+      </if>
+      <if test="handleInfo != null">
+        handle_info,
+      </if>
+      <if test="isurged != null">
+        isUrged,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="statuscode != null">
+        #{statuscode,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="handlerId != null">
+        #{handlerId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleTime != null">
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hrefId != null">
+        #{hrefId,jdbcType=BIGINT},
+      </if>
+      <if test="handleInfo != null">
+        #{handleInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isurged != null">
+        #{isurged,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.design.background.entity.Breakdown">
+    update breakdown_detail
+    <set>
+      <if test="statuscode != null">
+        statusCode = #{statuscode,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="handlerId != null">
+        handler_id = #{handlerId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleTime != null">
+        handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hrefId != null">
+        href_id = #{hrefId,jdbcType=BIGINT},
+      </if>
+      <if test="handleInfo != null">
+        handle_info = #{handleInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isurged != null">
+        isUrged = #{isurged,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.design.background.entity.Breakdown">
+    update breakdown_detail
+    set statusCode = #{statuscode,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      handler_id = #{handlerId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      href_id = #{hrefId,jdbcType=BIGINT},
+      handle_info = #{handleInfo,jdbcType=VARCHAR},
+      isUrged = #{isurged,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

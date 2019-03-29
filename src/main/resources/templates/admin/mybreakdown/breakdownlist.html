@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:include="_meta :: header">
+    <title>故障列表</title>
+</head>
+<body>
+<div class="page-container">
+    <form action="#"  method="post">
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <fieldset class="layui-elem-field">
+                <legend>故障记录</legend>
+                <!--<div class="layui-field-box">-->
+                    <!--<div class="search_condition">-->
+                        <!--<div class="layui-form-item ">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-12 col-sm-3">-->
+                                    <!--<input type="text" class="input-text"-->
+                                           <!--placeholder="故障描述" id="description" name="title" th:value="${description}"/>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-3">-->
+                                    <!--<input type="text" class="input-text" autocomplete="off" readonly="readonly"-->
+                                           <!--placeholder="故障发生日期开始范围"-->
+                                           <!--onfocus="WdatePicker({el:$dp.$('purchaseTime'),dateFmt:'yyyy-MM-dd'})"-->
+                                           <!--id="start" th:value="${createTimeStart}" name="createTimeStart"/>-->
+                                    <!--&lt;!&ndash;<input type="date" class="input-text" style="width:250px" placeholder="输入项目案例发布日期开始范围" id="start" th:value="${startDate}" name="startDate"/>&ndash;&gt;-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-3">-->
+                                    <!--<input type="text" class="input-text" autocomplete="off" readonly="readonly"-->
+                                           <!--placeholder="故障发生日期结束范围"-->
+                                           <!--onfocus="WdatePicker({el:$dp.$('purchaseTime'),dateFmt:'yyyy-MM-dd'})"-->
+                                           <!--id="end" th:value="${createTimeEnd}" name="createTimeEnd"/>-->
+                                    <!--&lt;!&ndash;<input type="date" class="input-text" style="width:250px" placeholder="输入项目案例发布日期开始范围" id="start" th:value="${startDate}" name="startDate"/>&ndash;&gt;-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-3">-->
+                                    <!--<input type="text" class="input-text" autocomplete="off" readonly="readonly"-->
+                                           <!--placeholder="故障处理日期开始范围"-->
+                                           <!--onfocus="WdatePicker({el:$dp.$('purchaseTime'),dateFmt:'yyyy-MM-dd'})"-->
+                                           <!--id="handleStart" th:value="${handleTimeStart}" name="handleTimeStart"/>-->
+                                    <!--&lt;!&ndash;<input type="date" class="input-text" style="width:250px" placeholder="输入项目案例发布日期开始范围" id="start" th:value="${startDate}" name="startDate"/>&ndash;&gt;-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-3">-->
+                                    <!--<input type="text" class="input-text" autocomplete="off" readonly="readonly"-->
+                                           <!--placeholder="故障处理日期结束范围"-->
+                                           <!--onfocus="WdatePicker({el:$dp.$('purchaseTime'),dateFmt:'yyyy-MM-dd'})"-->
+                                           <!--id="handleEnd" th:value="${handleTimeEnd}" name="handleTimeEnd"/>-->
+                                    <!--&lt;!&ndash;<input type="date" class="input-text" style="width:250px" placeholder="输入项目案例发布日期开始范围" id="start" th:value="${startDate}" name="startDate"/>&ndash;&gt;-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-2">-->
+                                    <!--<button class="layui-btn layui-btn-success radius" id="subbtn" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;"><i class="Hui-iconfont">&#xe665;</i> 搜故障</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <hr style="margin: 0">
+                <div class="cl pd-5 bg-1 bk-gray">
+						<span class="l">
+								<!--<a  href="javascript:;"-->
+                                    <!--th:onclick="'javascript:deleteAll(\''+@{/admin/breakdown/delete}+'\')'"-->
+                                    <!--class="layui-btn layui-btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i>-->
+									<!--批量删除-->
+								<!--</a>-->
+                            <!--&lt;!&ndash;<a  href="javascript:;"&ndash;&gt;-->
+                            <!--&lt;!&ndash;onclick="advert_add('添加知识信息','/admin/knowledge/toadd',800,600)"&ndash;&gt;-->
+                            <!--&lt;!&ndash;class="layui-btn  layui-btn-normal radius"><i class="Hui-iconfont">&#xe600;</i> </a>&ndash;&gt;-->
+
+                            </a>
+							</span>
+                    <span class="r wei-height">共有故障记录：<strong th:text="${pageInfo.total}"></strong> 条</span>
+                </div>
+                <hr>
+                <table class="layui-table text-c">
+                    <thead>
+                    <tr class="text-c">
+                        <th width="30">编号</th>
+                        <th width="150">故障描述</th>
+                        <th width="40">状态</th>
+                        <th width="150">故障发生时间</th>
+                        <th width="150">故障解决时间</th>
+                        <th width="50">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c" th:if="${pageInfo.getSize() == 0}"><td colspan="15"><strong>暂无数据</strong></td></tr>
+                    <tr class="text-c" th:each="breakdown,breakdownCount:${pageInfo.list}">
+                        <td th:text="${breakdownCount.count}"></td>
+                        <td th:text="${breakdown.getDescription()}"></td>
+                        <td><span th:if="${breakdown.getStatus() == 0}">待解决</span><span th:if="${breakdown.getStatus() == 1}">已解决</span><span th:if="${breakdown.getStatus() == 2}">已指派</span></td>
+                        <td th:text="${#dates.format(breakdown.getCreateTime(),'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#dates.format(breakdown.getHandleTime(),'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td class="td-manage" th:id="${breakdown.getId()}">
+                            <a th:if="${breakdown.getIsurged() == true}" title="已催单"  href="javascript:;" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe728;</i></a>
+                            <a th:if="${breakdown.getStatus() == 2}" title="点击以完成任务"  href="javascript:;" th:onclick="'javascript:advert_del(this,\''+@{/admin/mybreakdown/ok}+'/'+${breakdown.getId()}+'\')'" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe676;</i></a>
+                            <a th:if="${breakdown.getStatus() == 1}" title="已解决"  href="javascript:;" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe68e;</i></a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <div th:include="_pagination :: page"></div>
+    </form>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="_footer :: footerjs">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/lib/My97DatePicker/4.8/WdatePicker.js}" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" th:src="@{/lib/datatables/1.10.0/jquery.dataTables.min.js}" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" th:src="@{/lib/laypage/1.2/laypage.js}" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    /*
+        参数解释：
+        title	标题
+        url		请求的url
+        id		需要操作的数据id
+        w		弹出层宽度（缺省调默认值）
+        h		弹出层高度（缺省调默认值）
+    */
+    /*通告-增加*/
+    function advert_add(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+
+    /*通告-编辑*/
+    function advert_edit(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+
+    /*商品-单个删除*/
+    function advert_del(obj,url){
+        layer.confirm('确认已解决吗？',function(){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                contentType:"application/json",
+                dataType: 'json',
+                success: function(data){
+                    if(data.code == "000000"){
+                        layer.msg('解决成功!',{icon:1,time:1000});
+                        window.location.reload();
+                    }else{
+                        layer.msg('解决失败!',{icon:5,time:1000});
+                    }
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+    //批量删除
+    function deleteAll(url){
+        var listid = new Array();
+        $('input[name="id"]:checked').each(
+            function (i) {
+                listid[i] = $(this).val();
+            });
+        if(listid.length == 0){
+            layer.msg("请选择删除的通知！");
+            return false;
+        }
+        layer.confirm('确定要删除选中的全部数据吗？', {
+            btn : [ '确定', '取消' ]
+            // 按钮
+        }, function () {
+            $.ajax({
+                url:url,// 跳转到 action
+                data:JSON.stringify(listid),
+                type:'post',
+                cache:false,
+                dataType:'json',
+                contentType:"application/json",  //发送信息至服务器时内容编码类型。
+                success:function(data) {
+                    if(data.code == "000000"){
+                        layer.msg('删除成功!',{icon:1,time:1000});
+                        window.location.reload();
+                    }else{
+                        layer.msg('删除失败!',{icon:5,time:1000});
+                    }
+                },
+                error : function() {
+                    layer.msg("异常！");
+                }
+            });
+        }, function() {
+
+        });
+    }
+</script>
+</body>
